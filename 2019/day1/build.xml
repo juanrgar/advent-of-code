@@ -1,4 +1,4 @@
-<project>
+<project default="jar">
 
   <target name="clean">
     <delete dir="build"/>
@@ -13,15 +13,9 @@
     <mkdir dir="build/jar"/>
     <jar destfile="build/jar/Aoc.jar" basedir="build/classes">
       <manifest>
-        <attribute name="Main-Class" value="aoc.Aoc"/>
+        <attribute name="Main-Class" value="day1.Aoc"/>
       </manifest>
     </jar>
-  </target>
-
-  <target name="run" depends="jar">
-    <java jar="build/jar/Aoc.jar" fork="true">
-      <arg value="${PWD}/input1.txt"/>
-    </java>
   </target>
 
 </project>

@@ -1,5 +1,5 @@
 
-package aoc;
+package day1;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,40 +12,86 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Aoc {
+
+    private final double DIV_FACTOR = 3.0;
+    private final double SUB_FACTOR = 2.0;
+
     public static void main(String[] args) {
-	if (args.length != 1) {
-	    return;
+	if (args.length != 2) {
+	    Aoc.printUsage();
+	    System.exit(-1);
 	}
 
-	String filename = args[0];
+	Aoc aoc = new Aoc();
+	aoc.run(args);
+    }
 
-	System.out.println("Reading file " + filename);
+    private static void printUsage() {
+	System.out.println("aoc <1|2> <input_file>");
+    }
+
+    private void run(String[] args) {
+	List<Double> masses = readMasses(args[1]);
+
+	if (masses == null) {
+	    System.exit(-4);
+	}
+
+	boolean useFuelMass = Integer.parseInt(args[0]) == 2;
+
+	double fuel = computeFuel(masses, useFuelMass);
+
+	System.out.println(Double.toString(fuel));
+    }
+
+    private List<Double> readMasses(final String filename) {
+	List<Double> masses = null;
 
 	try {
-	    Reader reader = new FileReader(filename);
-
+	    Reader reader = new FileReader(filename); // throws FileNotFoundException
 	    BufferedReader bufReader = new BufferedReader(reader);
 
-	    List<Double> masses = new ArrayList<Double>();
+	    masses = new ArrayList<Double>();
 	    String line;
 
-	    while ((line = bufReader.readLine()) != null) {
+	    while ((line = bufReader.readLine()) != null) { // throws IOException
 		masses.add(Double.parseDouble(line));
 	    }
-
-	    System.out.println("Read " + Integer.toString(masses.size()) + " masses");
-
-	    Double m = masses
-		.stream()
-		.map((e) -> Math.floor(e / 3.0) - 2.0)
-		.reduce(0.0, (e1, e2) -> e1 + e2);
-	    System.out.println("Result: " + m);
 	} catch (FileNotFoundException e) {
 	    System.out.println("File not found: " + filename);
-	    return;
+	    System.exit(-2);
 	} catch (IOException e) {
 	    System.out.println("Error reader line");
-	    return;
+	    System.exit(-3);
 	}
+
+	return masses;
+    }
+
+    private double computeFuel(final List<Double> masses, boolean useFuelMass) {
+	return masses.stream()
+	    .map(e -> computeFuelForMass(e, useFuelMass))
+	    .reduce(0.0, (e1, e2) -> e1 + e2);
+    }
+
+    private double computeFuelForMass(double mass, boolean useFuelMass) {
+	double totalFuel = computeFuelForMass(mass);
+
+	if (useFuelMass) {
+	    double fuel = 0.0;
+	    mass = totalFuel;
+
+	    do {
+		totalFuel += fuel;
+		fuel = computeFuelForMass(mass);
+		mass = fuel;
+	    } while (fuel > 0.0);
+	}
+
+	return totalFuel;
+    }
+
+    private double computeFuelForMass(double mass) {
+	return Math.floor(mass / DIV_FACTOR) - SUB_FACTOR;
     }
 }
