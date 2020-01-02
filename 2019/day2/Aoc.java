@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import aoc.IntcodeCpu;
 
 public class Aoc {
 
@@ -29,6 +30,20 @@ public class Aoc {
 
     private void run(String[] args) {
 	List<Integer> program = readProgram(args[1]);
+	System.out.println("Program size: " + program.size());
+
+	IntcodeCpu cpu = new IntcodeCpu();
+
+	cpu.writeProgMemory(program);
+
+	/* before running the program, replace position 1 with the
+	   value 12 and replace position 2 with the value 2. */
+	cpu.writeProgMemory(1, 12);
+	cpu.writeProgMemory(2, 2);
+
+	cpu.run();
+
+	System.out.println(Integer.toString(cpu.readProgMemory(0)));
     }
 
     private List<Integer> readProgram(final String filename) {
@@ -45,8 +60,6 @@ public class Aoc {
 		    program.add((int) tokenizer.nval);
 		}
 	    }
-
-	    System.out.println("Program size: " + program.size());
 	} catch (FileNotFoundException e) {
 	    System.out.println("File not found: " + filename);
 	    System.exit(-2);
