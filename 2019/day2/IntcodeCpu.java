@@ -6,35 +6,38 @@ import java.util.List;
 
 public class IntcodeCpu {
     private int pc;
-    private List<Integer> progMemory;
+    private List<Integer> memory;
     private boolean halted;
 
     public IntcodeCpu() {
 	this.pc = 0;
-	this.progMemory = null;
+	this.memory = new ArrayList<Integer>();
 	this.halted = false;
     }
 
-    public void writeProgMemory(final List<Integer> memory) {
-	this.progMemory = new ArrayList<Integer>(memory);
+    public void writeMemory(final List<Integer> memory) {
+	if (!this.memory.isEmpty()) {
+	    this.memory.clear();
+	}
+
+	this.memory.addAll(memory);
     }
 
-    public int readProgMemory(int pos) {
+    public void writeMemory(int pos,
+			    int val) {
+	if (this.memory.size() > pos) {
+	    this.memory.set(pos, val);
+	}
+    }
+
+    public int readMemory(int pos) {
 	int data = -1;
 
-	if (this.progMemory != null) {
-	    if (this.progMemory.size() > pos) {
-		data = this.progMemory.get(pos);
-	    }
+	if (this.memory.size() > pos) {
+	    data = this.memory.get(pos);
 	}
 
 	return data;
-    }
-
-    public void writeProgMemory(int pos, int val) {
-	if (this.progMemory.size() > pos) {
-	    this.progMemory.set(pos, val);
-	}
     }
 
     public int getPc() {
@@ -51,7 +54,7 @@ public class IntcodeCpu {
 
     public void run() {
 	while (!this.isHalted()) {
-	    int opcode = this.fetchProgMemory();
+	    int opcode = this.fetchMemory();
 	    switch (opcode) {
 	    case 1:
 		add();
@@ -66,8 +69,8 @@ public class IntcodeCpu {
 	}
     }
 
-    private int fetchProgMemory() {
-	int data = readProgMemory(this.getPc());
+    private int fetchMemory() {
+	int data = readMemory(this.getPc());
 	this.incPc();
 
 	return data;
@@ -78,23 +81,23 @@ public class IntcodeCpu {
     }
 
     private void add() {
-	int op1 = this.readProgMemory(this.fetchProgMemory());
-	int op2 = this.readProgMemory(this.fetchProgMemory());
-	int resPos = this.fetchProgMemory();
+	int op1 = this.readMemory(this.fetchMemory());
+	int op2 = this.readMemory(this.fetchMemory());
+	int resPos = this.fetchMemory();
 
 	int res = op1 + op2;
 
-	this.writeProgMemory(resPos, res);
+	this.writeMemory(resPos, res);
     }
 
     private void mul() {
-	int op1 = this.readProgMemory(this.fetchProgMemory());
-	int op2 = this.readProgMemory(this.fetchProgMemory());
-	int resPos = this.fetchProgMemory();
+	int op1 = this.readMemory(this.fetchMemory());
+	int op2 = this.readMemory(this.fetchMemory());
+	int resPos = this.fetchMemory();
 
 	int res = op1 * op2;
 
-	this.writeProgMemory(resPos, res);
+	this.writeMemory(resPos, res);
     }
 
     private void halt() {

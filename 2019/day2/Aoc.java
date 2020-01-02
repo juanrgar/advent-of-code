@@ -29,21 +29,28 @@ public class Aoc {
     }
 
     private void run(String[] args) {
+	int part = Integer.parseInt(args[0]);
 	List<Integer> program = readProgram(args[1]);
 	System.out.println("Program size: " + program.size());
 
 	IntcodeCpu cpu = new IntcodeCpu();
 
-	cpu.writeProgMemory(program);
+	if (part == 1) {
+	    int res = runWithNounAndVerb(cpu, program, 12, 2);
 
-	/* before running the program, replace position 1 with the
-	   value 12 and replace position 2 with the value 2. */
-	cpu.writeProgMemory(1, 12);
-	cpu.writeProgMemory(2, 2);
+	    System.out.println(res);
+	} else if (part == 2) {
+	    for (int noun = 0; noun < 10; noun++) {
+		for (int verb = 0; verb < 10; verb++) {
+		    int res = runWithNounAndVerb(cpu, program, noun, verb);
+		    System.out.println("Res; " + res);
 
-	cpu.run();
-
-	System.out.println(Integer.toString(cpu.readProgMemory(0)));
+		    if (res == 19690720) {
+			System.out.println("Found");
+		    }
+		}
+	    }
+	}
     }
 
     private List<Integer> readProgram(final String filename) {
@@ -69,5 +76,19 @@ public class Aoc {
 	}
 
 	return program;
+    }
+
+    private int runWithNounAndVerb(IntcodeCpu cpu,
+				   final List<Integer> program,
+				   int noun,
+				   int verb) {
+	cpu.writeMemory(program);
+
+	cpu.writeMemory(1, noun);
+	cpu.writeMemory(2, verb);
+
+	cpu.run();
+
+	return cpu.readMemory(0);
     }
 }
