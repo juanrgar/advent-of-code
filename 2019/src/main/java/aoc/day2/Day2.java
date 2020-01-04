@@ -1,5 +1,7 @@
 
-package day2;
+package aoc.day2;
+
+import aoc.DayX;
 
 import java.io.FileReader;
 import java.io.StreamTokenizer;
@@ -10,25 +12,11 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import aoc.IntcodeCpu;
+import day2.IntcodeCpu;
 
-public class Aoc {
+public class Day2 implements DayX {
 
-    public static void main(String[] args) {
-	if (args.length != 2) {
-	    Aoc.printUsage();
-	    System.exit(-1);
-	}
-
-	Aoc aoc = new Aoc();
-	aoc.run(args);
-    }
-
-    private static void printUsage() {
-	System.out.println("aoc <1|2> <input_file>");
-    }
-
-    private void run(String[] args) {
+    public int run(String[] args) {
 	int part = Integer.parseInt(args[0]);
 	List<Integer> program = readProgram(args[1]);
 
@@ -49,6 +37,8 @@ public class Aoc {
 		}
 	    }
 	}
+
+	return 0;
     }
 
     private List<Integer> readProgram(final String filename) {

@@ -1,5 +1,7 @@
 
-package day1;
+package aoc.day1;
+
+import aoc.DayX;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,26 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Aoc {
+public class Day1 implements DayX {
 
     private final double DIV_FACTOR = 3.0;
     private final double SUB_FACTOR = 2.0;
 
-    public static void main(String[] args) {
-	if (args.length != 2) {
-	    Aoc.printUsage();
-	    System.exit(-1);
-	}
-
-	Aoc aoc = new Aoc();
-	aoc.run(args);
-    }
-
-    private static void printUsage() {
-	System.out.println("aoc <1|2> <input_file>");
-    }
-
-    private void run(String[] args) {
+    public int run(String[] args) {
 	List<Double> masses = readMasses(args[1]);
 
 	if (masses == null) {
@@ -42,6 +30,8 @@ public class Aoc {
 	double fuel = computeFuel(masses, useFuelMass);
 
 	System.out.println(Double.toString(fuel));
+
+	return 0;
     }
 
     private List<Double> readMasses(final String filename) {
