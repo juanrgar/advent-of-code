@@ -50,6 +50,7 @@ public class IntcodeCpu {
 
     public void reset() {
 	this.pc = 0;
+	this.halted = false;
     }
 
     public void run() {

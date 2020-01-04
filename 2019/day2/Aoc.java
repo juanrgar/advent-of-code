@@ -31,7 +31,6 @@ public class Aoc {
     private void run(String[] args) {
 	int part = Integer.parseInt(args[0]);
 	List<Integer> program = readProgram(args[1]);
-	System.out.println("Program size: " + program.size());
 
 	IntcodeCpu cpu = new IntcodeCpu();
 
@@ -40,13 +39,12 @@ public class Aoc {
 
 	    System.out.println(res);
 	} else if (part == 2) {
-	    for (int noun = 0; noun < 10; noun++) {
-		for (int verb = 0; verb < 10; verb++) {
+	    for (int noun = 0; noun < 100; noun++) {
+		for (int verb = 0; verb < 100; verb++) {
 		    int res = runWithNounAndVerb(cpu, program, noun, verb);
-		    System.out.println("Res; " + res);
-
 		    if (res == 19690720) {
-			System.out.println("Found");
+			System.out.println("Found; noun = " + noun + " verb = " + verb);
+			break;
 		    }
 		}
 	    }
@@ -87,6 +85,7 @@ public class Aoc {
 	cpu.writeMemory(1, noun);
 	cpu.writeMemory(2, verb);
 
+	cpu.reset();
 	cpu.run();
 
 	return cpu.readMemory(0);
