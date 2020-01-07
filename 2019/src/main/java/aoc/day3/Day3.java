@@ -15,7 +15,33 @@ import java.util.StringTokenizer;
 
 public class Day3 implements DayX {
 
-    private List<List<Integer>> wires;
+    private class Position {
+	private int x;
+	private int y;
+
+	public Position(int x, int y) {
+	    this.setX(x);
+	    this.setY(y);
+	}
+
+	public int getX() {
+	    return x;
+	}
+
+	public void setX(int x) {
+	    this.x = x;
+	}
+
+	public int getY() {
+	    return y;
+	}
+
+	public void setY(int y) {
+	    this.y = y;
+	}
+    }
+
+    private List<List<Position>> wires;
 
     public int run(String[] args) {
 	this.wires = new ArrayList<>();
@@ -33,7 +59,7 @@ public class Day3 implements DayX {
 	    String line;
 
 	    while ((line = bufReader.readLine()) != null) { // throws IOException
-		List<Integer> wire = readPath(line);
+		List<Position> wire = readPath(line);
 		this.wires.add(wire);
 	    }
 
@@ -47,11 +73,26 @@ public class Day3 implements DayX {
 	}
     }
 
-    private List<Integer> readPath(String line) {
-	List<Integer> wire = new ArrayList<>();
+    private List<Position> readPath(String line) {
+	Position curPos = new Position(0, 0);
+	List<Position> wire = new ArrayList<>();
 
-	StringTokenizer tokenizer = new StringTokenizer();
+	StringTokenizer tokenizer = new StringTokenizer(line, ",");
+
+	while (tokenizer.hasMoreTokens()) {
+	    String tok = tokenizer.nextToken();
+	    curPos = addPoints(tok, curPos, wire);
+	}
 
 	return wire;
+    }
+
+    private Position addPoints(final String mov,
+			       final Position curPos,
+			       List<Position> wire) {
+	char dir = mov.charAt(0);
+	int len = Integer.parseInt(mov.substring(1));
+
+	return curPos;
     }
 }
