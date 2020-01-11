@@ -1,5 +1,5 @@
 
-package day2;
+package aoc.day2;
 
 import java.util.ArrayList;
 import java.util.List;

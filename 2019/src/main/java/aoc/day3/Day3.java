@@ -139,8 +139,6 @@ public class Day3 implements DayX {
         Position curPos = new Position(0, 0);
         List<Position> wire = new ArrayList<>();
 
-        System.out.println("Initialized wire");
-
         StringTokenizer tokenizer = new StringTokenizer(line, ",");
 
         while (tokenizer.hasMoreTokens()) {
@@ -157,8 +155,6 @@ public class Day3 implements DayX {
         char dir = mov.charAt(0);
         int len = Integer.parseInt(mov.substring(1));
         Position endPos = new Position(curPos);
-
-        System.out.println("dir: " + dir + "; len: " + Integer.toString(len));
 
         switch (dir) {
         case 'U':
@@ -177,15 +173,9 @@ public class Day3 implements DayX {
             break;
         }
 
-        System.out.println("Departing pos: " + curPos.toString());
-        System.out.println("Ending pos: " + endPos.toString());
-
         this.addPointsInBetween(curPos, endPos, wire);
-        System.out.println("New wire length: " + wire.size());
 
         wire.add(endPos);
-
-        System.out.println("New wire length: " + wire.size());
 
         return endPos;
     }
@@ -197,13 +187,11 @@ public class Day3 implements DayX {
             if (p1.getY() < p2.getY()) {
                 for (int y = p1.getY() + 1; y != p2.getY(); y++) {
                     Position p = new Position(p1.getX(), y);
-                    System.out.println(p);
                     wire.add(p);
                 }
             } else {
                 for (int y = p1.getY() - 1; y != p2.getY(); y--) {
                     Position p = new Position(p1.getX(), y);
-                    System.out.println(p);
                     wire.add(p);
                 }
             }
@@ -211,13 +199,11 @@ public class Day3 implements DayX {
             if (p1.getX() < p2.getX()) {
                 for (int x = p1.getX() + 1; x != p2.getX(); x++) {
                     Position p = new Position(x, p1.getY());
-                    System.out.println(p);
                     wire.add(p);
                 }
             } else {
                 for (int x = p1.getX() - 1; x != p2.getX(); x--) {
                     Position p = new Position(x, p1.getY());
-                    System.out.println(p);
                     wire.add(p);
                 }
             }
@@ -225,35 +211,20 @@ public class Day3 implements DayX {
     }
 
     private List<Position> findIntersections() {
-        List<Position> intersect = new ArrayList<Position>();
-        int nbWires = this.wires.size();
-        boolean wireMatches = true;
-        int i = 0;
+        List<Position> intersect = findIntersections(this.wires.get(0), this.wires.get(1));
 
-        List<Position> refWire = this.wires.get(0);
-        System.out.println("Ref wire length " + refWire.size());
-        for (Position p : refWire) {
-            System.out.println("Comparing against " + p);
-            i = 1;
-            while (wireMatches && (i < nbWires)) {
-                List<Position> wire = this.wires.get(i);
-                wireMatches = false;
-                System.out.println("Wire length " + wire.size());
-                for (Position pp : wire) {
-                    System.out.println(p + " <> " + pp);
-                    if (p.equals(pp)) {
-                        wireMatches = true;
-                        break;
-                    }
+        return intersect;
+    }
+
+    private List<Position> findIntersections(final List<Position> wire1,
+                                             final List<Position> wire2) {
+        List<Position> intersect = new ArrayList<>();
+
+        for (Position p1 : wire1) {
+            for (Position p2 : wire2) {
+                if (p1.equals(p2)) {
+                    intersect.add(p1);
                 }
-
-                if (wireMatches) {
-                    i++;
-                }
-            }
-
-            if (i == nbWires) {
-                intersect.add(p);
             }
         }
 

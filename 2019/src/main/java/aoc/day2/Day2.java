@@ -12,7 +12,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import day2.IntcodeCpu;
+import aoc.day2.IntcodeCpu;
 
 public class Day2 implements DayX {
 
