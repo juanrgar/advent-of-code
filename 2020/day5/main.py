@@ -10,28 +10,25 @@ def read_seats(filename):
     for l in lines:
         l = l.strip()
         m = 0
-        M = 128
-        r = 0
+        M = 127
         for c in l[:7]:
-            h = ((M - m) / 2) + m
             if c == 'F':
-                M = h
-                r = m
+                M = ((M - m + 1) / 2) - 1 + m
             elif c == 'B':
-                m = h
-                r = M
+                m = ((M - m + 1) / 2) + m
+
+        r = m
 
         m = 0
         M = 8
         col = 0
         for c in l[7:]:
-            h = ((M - m) / 2) + m
             if c == 'F':
-                M = h
-                col = m
+                M = ((M - m + 1) / 2) - 1 + m
             elif c == 'B':
-                m = h
-                col = M
+                m = ((M - m + 1) / 2) + m
+
+        col = m
 
         seats.append(int(r * 8 + col))
 
