@@ -23,9 +23,9 @@ def read_seats(filename):
         M = 8
         col = 0
         for c in l[7:]:
-            if c == 'F':
+            if c == 'L':
                 M = ((M - m + 1) / 2) - 1 + m
-            elif c == 'B':
+            elif c == 'R':
                 m = ((M - m + 1) / 2) + m
 
         col = m
@@ -37,6 +37,7 @@ def read_seats(filename):
 def main():
     filename = sys.argv[1]
     seats = read_seats(filename)
+    print(max(seats))
 
     free = [x for x in range(128 * 8) if x not in seats]
 
