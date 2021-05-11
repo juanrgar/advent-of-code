@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import copy
 import sys
 
 class Instruction(object):
@@ -38,16 +39,33 @@ def exec_program(prog):
         elif i.opcode == 'jmp':
             pc += i.arg
         if pc in pc_hist:
-            print(acc)
+            print('Infinite loop ' + str(acc))
             return
         if pc >= len(prog):
-            print(acc)
+            print('Program finished ' + str(acc))
             return
+
+def create_alt_programs(prog):
+    inst_changed = list()
+    progs = list()
+    for pc in range(len(prog)):
+        if prog[pc].opcode == 'nop':
+            p = copy.deepcopy(prog)
+            p[pc].opcode = 'jmp'
+            progs.append(p)
+        elif prog[pc].opcode == 'jmp':
+            p = copy.deepcopy(prog)
+            p[pc].opcode = 'nop'
+            progs.append(p)
+    return progs
 
 def main():
     filename = sys.argv[1]
     prog = read_program(filename)
     exec_program(prog)
+    progs = create_alt_programs(prog)
+    for p in progs:
+        exec_program(p)
 
 if __name__ == "__main__":
     main()
