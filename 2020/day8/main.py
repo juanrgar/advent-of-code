@@ -24,8 +24,25 @@ def read_program(filename):
     return prog
 
 def exec_program(prog):
-    for i in prog:
-        print(i)
+    pc_hist = list()
+    pc = 0
+    acc = 0
+    while True:
+        pc_hist.append(pc)
+        i = prog[pc]
+        if i.opcode == 'nop':
+            pc += 1
+        elif i.opcode == 'acc':
+            acc += i.arg
+            pc += 1
+        elif i.opcode == 'jmp':
+            pc += i.arg
+        if pc in pc_hist:
+            print(acc)
+            return
+        if pc >= len(prog):
+            print(acc)
+            return
 
 def main():
     filename = sys.argv[1]
