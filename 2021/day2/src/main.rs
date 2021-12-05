@@ -39,11 +39,27 @@ fn main() {
 
     let mut pos = Point { x : 0, y : 0 };
 
-    for c in cmds {
+    for c in &cmds {
         match c.d {
             Direction::Forward => pos.x += c.n,
             Direction::Down => pos.y += c.n,
             Direction::Up => pos.y -= c.n,
+        }
+    }
+
+    println!("{}", pos.x * pos.y);
+
+    pos = Point { x : 0, y : 0 };
+    let mut aim = 0;
+
+    for c in &cmds {
+        match c.d {
+            Direction::Forward => {
+                pos.x += c.n;
+                pos.y += aim * c.n;
+            },
+            Direction::Down => aim += c.n,
+            Direction::Up => aim -= c.n,
         }
     }
 
