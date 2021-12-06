@@ -14,7 +14,7 @@ fn main() {
     let mut freq: Vec<i32> = vec![0; report[0].len()];
     let mut i;
 
-    for r in report {
+    for r in &report {
         i = 0;
         for c in r.chars() {
             match c {
@@ -42,8 +42,8 @@ fn main() {
     println!("{}", gamma_str);
     println!("{}", epsilon_str);
 
-    let gamma = s_to_i32(gamma_str);
-    let epsilon = s_to_i32(epsilon_str);
+    let gamma = s_to_i32(&gamma_str);
+    let epsilon = s_to_i32(&epsilon_str);
 
     println!("{}", gamma);
     println!("{}", epsilon);
@@ -51,7 +51,7 @@ fn main() {
     println!("{}", gamma * epsilon);
 }
 
-fn s_to_i32(s: String) -> i32 {
+fn s_to_i32(s: &String) -> i32 {
     let mut ret = 0;
     let mut schars = s.chars();
 
