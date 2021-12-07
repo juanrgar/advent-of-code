@@ -37,27 +37,79 @@ fn main() {
 
     println!("{}", gamma * epsilon);
 
-    let mut o2_str: String;
-    let mut co2_str: String;
+    let mut r0 = clone_vector(&report);
+    let mut i = 0;
+    while r0.len() > 1 {
+        let freq = count_freq(&r0, i);
+        if freq[0] >= 0 {
+            clean_vector(&mut r0, i, b'1');
+        } else {
+            clean_vector(&mut r0, i, b'0');
+        }
+        i += 1;
+    }
+
+    let mut r1 = clone_vector(&report);
+    let mut i = 0;
+    while r1.len() > 1 {
+        let freq = count_freq(&r1, i);
+        if freq[0] >= 0 {
+            clean_vector(&mut r1, i, b'0');
+        } else {
+            clean_vector(&mut r1, i, b'1');
+        }
+        i += 1;
+    }
+
+    let o2_str: String = r0[0].clone();
+    let co2_str: String = r1[0].clone();
+
+    println!("{}", o2_str);
+    println!("{}", co2_str);
+
+    let o2 = s_to_i32(&o2_str);
+    let co2 = s_to_i32(&co2_str);
+
+    println!("{}", o2);
+    println!("{}", co2);
+    println!("{}", o2 * co2);
 }
 
 fn count_freq(report: &Vec<String>, start: usize) -> Vec<i32> {
     let mut freq: Vec<i32> = vec![0; report[0].len() - start];
     let mut i;
+    let mut j;
 
     for r in report {
         i = start;
-        for c in r.chars() {
-            match c {
-                '0' => freq[i] -= 1,
-                '1' => freq[i] += 1,
+        j = 0;
+        let b = r.as_bytes();
+        while i < b.len() {
+            match b[i] {
+                b'0' => freq[j] -= 1,
+                b'1' => freq[j] += 1,
                 _ => (),
             }
             i += 1;
+            j += 1;
         }
     }
 
     freq
+}
+
+fn clone_vector(v: &Vec<String>) -> Vec<String> {
+    let mut ret: Vec<String> = Vec::new();
+
+    for e in v {
+        ret.push(e.clone());
+    }
+
+    ret
+}
+
+fn clean_vector(report: &mut Vec<String>, i: usize, c: u8) {
+    report.retain(|x| x.as_bytes()[i] == c);
 }
 
 fn s_to_i32(s: &String) -> i32 {
