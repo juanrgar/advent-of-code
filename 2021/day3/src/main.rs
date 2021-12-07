@@ -11,26 +11,13 @@ fn main() {
         }
     }
 
-    let mut freq: Vec<i32> = vec![0; report[0].len()];
-    let mut i;
-
-    for r in &report {
-        i = 0;
-        for c in r.chars() {
-            match c {
-                '0' => freq[i] -= 1,
-                '1' => freq[i] += 1,
-                _ => (),
-            }
-            i += 1;
-        }
-    }
+    let freq = count_freq(&report, 0);
 
     let mut gamma_str : String = String::new();
     let mut epsilon_str : String = String::new();
 
-    for f in freq {
-        if f > 0 {
+    for f in &freq {
+        if *f > 0 {
             gamma_str.push('1');
             epsilon_str.push('0');
         } else {
@@ -49,6 +36,28 @@ fn main() {
     println!("{}", epsilon);
 
     println!("{}", gamma * epsilon);
+
+    let mut o2_str: String;
+    let mut co2_str: String;
+}
+
+fn count_freq(report: &Vec<String>, start: usize) -> Vec<i32> {
+    let mut freq: Vec<i32> = vec![0; report[0].len() - start];
+    let mut i;
+
+    for r in report {
+        i = start;
+        for c in r.chars() {
+            match c {
+                '0' => freq[i] -= 1,
+                '1' => freq[i] += 1,
+                _ => (),
+            }
+            i += 1;
+        }
+    }
+
+    freq
 }
 
 fn s_to_i32(s: &String) -> i32 {
