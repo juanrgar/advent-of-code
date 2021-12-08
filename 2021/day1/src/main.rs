@@ -16,7 +16,7 @@ fn main() {
     let mut prev_depth = -1;
 
     for d in &depths {
-        if prev_depth > 0 && *d > prev_depth {
+        if prev_depth >= 0 && *d > prev_depth {
             inc_count += 1;
         }
         prev_depth = *d;
@@ -27,7 +27,7 @@ fn main() {
     let mut depths3: Vec<i32> = Vec::new();
 
     let mut i = 0;
-    while i < depths.len() {
+    loop {
         if (i + 2) >= depths.len() {
             break;
         }
@@ -41,7 +41,7 @@ fn main() {
     prev_depth = -1;
 
     for d in &depths3 {
-        if prev_depth > 0 && *d > prev_depth {
+        if prev_depth >= 0 && *d > prev_depth {
             inc_count += 1;
         }
         prev_depth = *d;
