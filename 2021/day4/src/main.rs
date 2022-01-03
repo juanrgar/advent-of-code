@@ -33,7 +33,8 @@ impl Board {
         for j in 0..NCOLS as usize {
             let mut res = true;
             for i in 0..NROWS as usize {
-                res = res && self.numbers[i * NCOLS + j].checked;
+                let e = &self.numbers[i * NCOLS + j];
+                res = res && e.checked;
             }
             if res {
                 return true;
@@ -46,7 +47,8 @@ impl Board {
         for i in 0..NROWS as usize {
             let mut res = true;
             for j in 0..NCOLS as usize {
-                res = res && self.numbers[i * NCOLS + j].checked;
+                let e = &self.numbers[i * NCOLS + j];
+                res = res && e.checked;
             }
             if res {
                 return true;
@@ -57,7 +59,6 @@ impl Board {
 
     fn sum_unchecked(&self) -> u32 {
         let mut sum = 0;
-
         for i in 0..NROWS as usize {
             for j in 0..NCOLS as usize {
                 let e = &self.numbers[i * NCOLS + j];
@@ -66,7 +67,6 @@ impl Board {
                 }
             }
         }
-
         sum
     }
 }
@@ -74,7 +74,6 @@ impl Board {
 fn main() {
     let mut numbers: Vec<u32> = Vec::new();
     let mut boards: Vec<Board> = Vec::new();
-//    let mut boards: Vec<Vec<u32>> = Vec::new();
 
     if let Ok(mut lines) = read_lines("input.txt") {
         let numbers_line = lines.next().unwrap().unwrap();
@@ -110,7 +109,7 @@ fn main() {
     }
 
     for n in numbers {
-        for b in boards.iter_mut() {
+        for b in &mut boards {
             if !b.won {
                 if b.check_num(n) {
                     if b.check_cols() {
