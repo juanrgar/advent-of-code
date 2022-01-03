@@ -12,6 +12,7 @@ struct BoardNum {
 
 struct Board {
     numbers: Vec<BoardNum>,
+    won: bool
 }
 
 impl Board {
@@ -92,7 +93,8 @@ fn main() {
             let line = lit.unwrap().unwrap();
             if line.len() == 0 {
                 boards.push(Board {
-                    numbers: Vec::new()
+                    numbers: Vec::new(),
+                    won: false
                 });
             } else {
                 let board_numbers = line.split_whitespace();
@@ -107,21 +109,22 @@ fn main() {
         }
     }
 
-    'outer: for n in numbers {
+    for n in numbers {
         for b in boards.iter_mut() {
-            if b.check_num(n) {
-                println!("found number {}", n);
-                if b.check_cols() {
-                    println!("full col");
-                    let s = b.sum_unchecked() * n;
-                    println!("{}", s);
-                    break 'outer;
-                }
-                if b.check_rows() {
-                    println!("full row");
-                    let s = b.sum_unchecked() * n;
-                    println!("{}", s);
-                    break 'outer;
+            if !b.won {
+                if b.check_num(n) {
+                    if b.check_cols() {
+                        println!("full col");
+                        let s = b.sum_unchecked() * n;
+                        println!("{}", s);
+                        b.won = true;
+                    }
+                    if b.check_rows() {
+                        println!("full row");
+                        let s = b.sum_unchecked() * n;
+                        println!("{}", s);
+                        b.won = true;
+                    }
                 }
             }
         }
