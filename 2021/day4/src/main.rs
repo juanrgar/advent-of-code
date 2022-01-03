@@ -2,13 +2,72 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
 
+const NCOLS: usize = 5;
+const NROWS: usize = 5;
+
 struct BoardNum {
     number: u32,
     checked: bool
 }
 
 struct Board {
-    numbers: Vec<BoardNum>
+    numbers: Vec<BoardNum>,
+}
+
+impl Board {
+    fn check_num(&mut self, num: u32) -> bool {
+        for i in 0..NROWS as usize {
+            for j in 0..NCOLS as usize {
+                let e = &mut self.numbers[i * NCOLS + j];
+                if !e.checked && (e.number == num) {
+                    e.checked = true;
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    fn check_cols(&mut self) -> bool {
+        for j in 0..NCOLS as usize {
+            let mut res = true;
+            for i in 0..NROWS as usize {
+                res = res && self.numbers[i * NCOLS + j].checked;
+            }
+            if res {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn check_rows(&mut self) -> bool {
+        for i in 0..NROWS as usize {
+            let mut res = true;
+            for j in 0..NCOLS as usize {
+                res = res && self.numbers[i * NCOLS + j].checked;
+            }
+            if res {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn sum_unchecked(&self) -> u32 {
+        let mut sum = 0;
+
+        for i in 0..NROWS as usize {
+            for j in 0..NCOLS as usize {
+                let e = &self.numbers[i * NCOLS + j];
+                if !e.checked {
+                    sum += e.number;
+                }
+            }
+        }
+
+        sum
+    }
 }
 
 fn main() {
@@ -43,6 +102,26 @@ fn main() {
                         number: n.parse::<u32>().unwrap(),
                         checked: false
                     });
+                }
+            }
+        }
+    }
+
+    'outer: for n in numbers {
+        for b in boards.iter_mut() {
+            if b.check_num(n) {
+                println!("found number {}", n);
+                if b.check_cols() {
+                    println!("full col");
+                    let s = b.sum_unchecked() * n;
+                    println!("{}", s);
+                    break 'outer;
+                }
+                if b.check_rows() {
+                    println!("full row");
+                    let s = b.sum_unchecked() * n;
+                    println!("{}", s);
+                    break 'outer;
                 }
             }
         }
