@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
@@ -35,6 +36,29 @@ fn main() {
     for s in &segments {
         println!("{},{} -> {},{}", s.start.x, s.start.y, s.end.x, s.end.y);
     }
+
+    let mut crossings: HashMap<Point, u32> = HashMap::new();
+
+    for i in 0..segments.len() {
+        for j in i..segments.len() {
+            let si = &segments[i];
+            let sj = &segments[j];
+
+            let points = segments_cross(&si, &sj);
+            for p in points {
+                match crossings.get(p) {
+                    Some(c) => c += 1,
+                    None => crossings.insert(p, 1)
+                }
+            }
+        }
+    }
+}
+
+fn segments_cross(sa: &Segment, sb: &Segment) -> Vec<Point> {
+    let mut ret = Vec::new();
+
+    ret
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
