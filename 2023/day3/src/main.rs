@@ -8,6 +8,11 @@ struct Pos {
     col: u32
 }
 
+struct SymPos {
+    sym: char,
+    pos: Pos
+}
+
 struct NumPos {
     num: u32,
     pos: Pos,
@@ -18,7 +23,7 @@ fn main() {
     let mut acc = 0;
 
     let mut numbers: Vec<NumPos> = Vec::new();
-    let mut symbols: Vec<Pos> = Vec::new();
+    let mut symbols: Vec<SymPos> = Vec::new();
 
     let mut row: u32 = 0;
 
@@ -51,9 +56,9 @@ fn main() {
                     }
                     number_str.push(c);
                 } else if c != '.' {
-                    symbols.push(Pos{
-                        row: row,
-                        col: i as u32
+                    symbols.push(SymPos{
+                        sym: c,
+                        pos: Pos{row: row, col: i as u32}
                     });
                     in_number = false;
                 } else {
@@ -80,32 +85,32 @@ fn main() {
             println!("num = {}", num.num);
             println!("num.pos.col = {}, num.pos.row = {}", num.pos.col, num.pos.row);
             for sym in &symbols {
-                println!("sym.col = {}, sym.row = {}", sym.col, sym.row);
-                if sym.row == num.pos.row {
-                    if (num.pos.col > 0 && sym.col == (num.pos.col - 1)) ||
-                        sym.col == (num.pos.col + num.len) {
+                println!("sym.col = {}, sym.row = {}", sym.pos.col, sym.pos.row);
+                if sym.pos.row == num.pos.row {
+                    if (num.pos.col > 0 && sym.pos.col == (num.pos.col - 1)) ||
+                        sym.pos.col == (num.pos.col + num.len) {
                         part_numbers.push(num.num);
                         break;
                     }
                 }
                 if num.pos.row > 0 {
-                    if sym.row == (num.pos.row - 1) {
+                    if sym.pos.row == (num.pos.row - 1) {
                         let mut start: u32 = 0;
                         if num.pos.col > 0 {
                             start = num.pos.col - 1;
                         }
-                        if (sym.col >= start) && (sym.col <= (num.pos.col + num.len)) {
+                        if (sym.pos.col >= start) && (sym.pos.col <= (num.pos.col + num.len)) {
                             part_numbers.push(num.num);
                             break;
                         }
                     }
                 }
-                if sym.row == (num.pos.row + 1) {
+                if sym.pos.row == (num.pos.row + 1) {
                     let mut start: u32 = 0;
                     if num.pos.col > 0 {
                         start = num.pos.col - 1;
                     }
-                    if (sym.col >= start) && (sym.col <= (num.pos.col + num.len)) {
+                    if (sym.pos.col >= start) && (sym.pos.col <= (num.pos.col + num.len)) {
                         part_numbers.push(num.num);
                         break;
                     }
@@ -118,6 +123,55 @@ fn main() {
         println!("{}", numbers.len());
         println!("{}", part_numbers.len());
         println!("{:?}", part_numbers);
+
+        println!("Part 2");
+
+        acc = 0;
+        for sym in &symbols {
+            if sym.sym != '*' {
+                continue;
+            }
+
+            println!("sym = {}", sym.sym);
+            println!("sym.pos.col = {}, sym.pos.row = {}", sym.pos.col, sym.pos.row);
+
+
+            let mut adj_num : Vec<u32> = Vec::new();
+
+            for num in &numbers {
+                println!("num.col = {}, num.row = {}", num.pos.col, num.pos.row);
+                if sym.pos.row == num.pos.row {
+                    if (num.pos.col > 0 && sym.pos.col == (num.pos.col - 1)) ||
+                        sym.pos.col == (num.pos.col + num.len) {
+                        adj_num.push(num.num);
+                    }
+                }
+                if num.pos.row > 0 {
+                    if sym.pos.row == (num.pos.row - 1) {
+                        let mut start: u32 = 0;
+                        if num.pos.col > 0 {
+                            start = num.pos.col - 1;
+                        }
+                        if (sym.pos.col >= start) && (sym.pos.col <= (num.pos.col + num.len)) {
+                            adj_num.push(num.num);
+                        }
+                    }
+                }
+                if sym.pos.row == (num.pos.row + 1) {
+                    let mut start: u32 = 0;
+                    if num.pos.col > 0 {
+                        start = num.pos.col - 1;
+                    }
+                    if (sym.pos.col >= start) && (sym.pos.col <= (num.pos.col + num.len)) {
+                        adj_num.push(num.num);
+                    }
+                }
+            }
+
+            if adj_num.len() == 2 {
+                acc += adj_num[0] * adj_num[1];
+            }
+        }
     }
     println!("{}", acc);
 }
