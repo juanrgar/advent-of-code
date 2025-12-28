@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 static void print_vec(const std::vector<long> & v)
 {
     for (auto&& e : v) {
@@ -39,26 +41,26 @@ int main(int argc, char *argv[])
 
     input1.close();
 
-    {
-        long pos = 50;
-        unsigned count = 0;
-
-        for (auto i{0}; i < l_col.size(); i++) {
-            const unsigned char dir = l_col[i];
-            const unsigned long num = r_col[i];
-
-            long mov = num * ((dir == 'L') ? -1 : 1);
-
-            pos += mov;
-            pos %= 100;
-            if (pos < 0) pos = 100 + pos;
-            // https://www.learncpp.com/cpp-tutorial/remainder-and-exponentiation/
-
-            if (pos == 0) count++;
-        }
-
-        std::cout << count << std::endl;
-    }
+//    {
+//        long pos = 50;
+//        unsigned count = 0;
+//
+//        for (auto i{0}; i < l_col.size(); i++) {
+//            const unsigned char dir = l_col[i];
+//            const unsigned long num = r_col[i];
+//
+//            long mov = num * ((dir == 'L') ? -1 : 1);
+//
+//            pos += mov;
+//            pos %= 100;
+//            if (pos < 0) pos = 100 + pos;
+//            // https://www.learncpp.com/cpp-tutorial/remainder-and-exponentiation/
+//
+//            if (pos == 0) count++;
+//        }
+//
+//        std::cout << count << std::endl;
+//    }
 
     {
         // TODO
@@ -71,12 +73,34 @@ int main(int argc, char *argv[])
 
             long mov = num * ((dir == 'L') ? -1 : 1);
 
+            cout << "======" << endl;
+            cout << "pos " << pos << endl;
+            cout << "mov " << mov << endl;
+
+            long diff = 0;
+            if (mov > 0) {
+                diff = 100 - pos;
+            } else {
+                diff = pos;
+            }
+
+            long abs_mov = abs(mov);
+            unsigned full_spins = (abs_mov / 100);
+
+            count += full_spins;
+
+            abs_mov -= (full_spins * 100);
+            if ((abs_mov > 0) && (pos != 0) && (abs_mov >= diff)) {
+                count++;
+            }
+
+            cout << "count " << count << endl;
+
             pos += mov;
             pos %= 100;
             if (pos < 0) pos = 100 + pos;
             // https://www.learncpp.com/cpp-tutorial/remainder-and-exponentiation/
-
-            if (pos == 0) count++;
+            cout << "pos " << pos << endl;
         }
 
         std::cout << count << std::endl;
